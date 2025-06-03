@@ -1,0 +1,95 @@
+
+
+PART IX - ASP.NET CORE
+Chapter30
+Introducing ASP.NET Core
+
+Model-View-Controller (MVC) patterns
+Model: data is represented by Plain Old CLR Objects (POCOs)
+View: the user interface of the application, accepts commands and renders the results to the user, should be as lightwieght as possible
+Controller: the brains of the application, take commands/requests from the user and handle them appropriately
+
+Kestrel: is the open source web server
+
+Create a ASP.NET Core Web API
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
