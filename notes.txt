@@ -1,5 +1,229 @@
 
 
+Tuples
+(string, int, string) values01 = ("a", 5, "c");
+Console.WriteLine($"Values01 {values01}");
+
+var values02 = ("a", 5, "c");
+Console.WriteLine($"Values02 {values02}");
+Console.WriteLine($"First item: {values02.Item1}");
+Console.WriteLine($"Second item: {values02.Item2}");
+Console.WriteLine($"Third item: {values02.Item2}");
+
+// add names
+(string FirstLetter, int theNumber, string SecondLetter) valuesWithNames01 = ("a", 5, "c");
+Console.WriteLine($"First item: {valuesWithNames01.FirstLetter}");
+Console.WriteLine($"Second item: {valuesWithNames01.theNumber}");
+Console.WriteLine($"Third item: {valuesWithNames01.SecondLetter}");
+
+// can use the actual name or the item number
+var valuesWithNames02 = (FirstLetter: "a", TheNumber: 5, SecondLetter: "c");
+Console.WriteLine($"First item: {valuesWithNames02.Item1}");
+Console.WriteLine($"Second item: {valuesWithNames02.Item2}");
+Console.WriteLine($"Third item: {valuesWithNames02.Item3}");
+
+Inferred Variable Names
+var foo = new { Prop1 = "first", Prop2 = "second" };
+var bar = (foo.Prop1, foo.Prop2);
+Console.WriteLine($"Inferred type: {bar.Prop1}; {bar.Prop2}");
+
+Returning tuples
+static (dataType01 parameterName01, dataType02 parameterName02) MethodName()
+{
+	return (value01, value02);
+}
+
+
+
+PART III - OBJECT ORIENTED PROGRAMMING WITH C#
+Chapter05
+Understanding Encapsulation
+
+a class is a user-defined type that is composed of field data (member variables)
+state: the set of field data of a class instance (object)
+
+Constructors
+this: provides access to the current class instance
+
+Chaining constructor calls
+the constructor with the greatest number of arguments as the "master constructor"
+
+public MyClass
+{
+	public MyClass() {}
+	
+	public MyClass(int aNumber)
+		: this(aNumber, "") {}
+		
+	public MyClass(string aString)
+		: this(0, aString) {}
+		
+	public MyClass(int aNumber, string aString)
+	{
+		// a bunch of amazing logic
+	}
+}
+
+Optional arguments with constructors
+
+public MyClass
+{		
+	// can use this 1 constructor to define: 0, 1, or 2 parameters
+	public MyClass(int aNumber = 0, string aString = "")
+	{
+		// a bunch of amazing logic
+	}
+}
+
+Acess Modifiers
+type members: implicity private
+types: implicity internal
+
+use properties when setting class data
+
+Pattern matching with properties
+
+// extended property patterns
+
+propertyName = this switch
+{
+	{ propertyName01 = value01, propertyName02: enumType.value, propertyName03.value > value03 }
+		=> propertyName += x * y;
+	_ => propertyName, //the catch all
+};
+
+public void GiveBonus(float amount)
+{
+	Pay = this switch
+	{
+		{ Age: >= 18, PayType: EmployeePayTypeEnum.Commission, HireDate.Year: > 2020 }
+			=> Pay += 0.10F * amount,
+		{ Age: >= 18, PayType: EmployeePayTypeEnum.Hourly, HireDate.Year: > 2020 }
+			=> Pay += 40F * amount / 2080F,
+		{ Age: >= 18, PayType: EmployeePayTypeEnum.Salaried, HireDate.Year: > 2020 }
+			=> Pay += amount,
+		_ => Pay += 0
+	};
+}
+
+Object Initialization
+object initializer syntax
+
+MyClass myClassInstance = new MyClass { propertyName01 = value01, propertyName02 = value02 };
+
+init-only setters
+enable a property to have its value set during initialization, but after construction is complete on the object, the property becomes read-only. They are immutable properties
+
+class MyClass
+{
+	public int PropertyName01 { get; init; }
+	public int PropertyName02 { get; init; }
+	
+	// the key is here, the property names can be set once, then read onwards
+	public MyClass(dataType01 parameterName01, dataType02 parameterName02)
+	{
+		PropertyName01 = parameterName01;
+		PropertyName02 = parameterName02;
+	}
+}
+
+can call a custom constructor with initialization syntax
+MyClass myClassInstance = new MyClass(parameter) { propertyName01 = value01, propertyName02 = value02 };
+
+Records
+provide synthesized methods for equality using value semantics and data encapsulation, a special type of class
+
+record and record class mean the same thing
+
+positional record type: the constructor defines the properties on the record.
+3 considerations with this syntax:
+1.) Cannot use object initialization of record types using the compact definition syntax
+2.) The record must be constructed with the properties in the correct positional
+3.) The casing of the properties in the constructor is directly translated to the casing of the properties on the record type
+
+We can deconstruct a mutable record type
+MyRecord myRecordInstance = new MyRecord("Bob", 40, "Blue");
+myRecordInstance.Deconstruct(out string name, out int age, out string color);
+Console.WriteLine($"Name: {name} Age: {age} Color: {color}");
+
+out variables only have to match the position of the parameters, can change the name
+myRecordInstance.Deconstruct(out string a, out int b, out string c);
+Console.WriteLine($"Name: {a} Age: {b} Color: {c}");
+
+can also use the tuple syntax
+var (name01, age01, color01) = myRecordInstance;
+Console.WriteLine($"Name: {name01} Age: {age01} Color: {color01}");
+
+Record types are considered equal if:
+1.) They hold the same values
+2.) They are the same type
+just like value types
+
+Copying Record types
+assigning a record type instance to a new variable creates a pointer to the same reference which is the same behavior as classes
+
+nondestructive mutation: create a true copy of a record with 1 or more properties modified use the with expression
+the with expression needs to be updated by specifiying their new values, any properties not listed are shallow copied exactly
+
+MyRecord newRecordInstance = MyRecord with { Age = 25 };
+
+Record Structs
+value type equivalent of record objects, mutable by default
+can use:
+1.) positional parameters
+or
+2.) standard property syntax
+
+Provide:
+1.) value equality
+2.) nondestructive mutation
+3.) built-in display formatting
+
+// example
+
+// positional syntax
+public record struct MyStruct(dataType01 value01, dataType02 value02);
+var mine = new MyStruct(1, 2, 3);
+mine.value01 = 10;
+
+// standard properties
+public record struct MyStruct()
+{
+	public dataType01 value01 { get; set; } = default;
+	public dataType02 value02 { get; set; } = default;
+	
+	public MyStruct(dataType01 value01, dataType02 value02) : this()
+	{
+		this.value01 = value01;
+		this.value02 = value02;
+	}
+};
+
+var mine = new MyStruct(1, 2, 3);
+mine.value01 = 10;
+
+Can make the structs immutable
+public readonly record struct MyStruct(dataType01 value01, dataType02 value02);
+
+Can deconstruct record structs
+
+var (a, b, c) = mine;
+Console.WriteLine($"A: {a} B: {b} C: {c}");
+
+
+
+Chapter06
+Understanding Inheritance and Polymorphism
+
+Left off page 301
+
+
+
+
+
+
+
+
 PART IX - ASP.NET CORE
 Chapter30
 Introducing ASP.NET Core
