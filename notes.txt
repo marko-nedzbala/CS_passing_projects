@@ -217,7 +217,7 @@ Understanding Inheritance and Polymorphism
 
 A derived class never inherits the constructors of a parent class, constructors are used to construct only the class that they are defined within
 
-
+Left off page 307
 
 
 
