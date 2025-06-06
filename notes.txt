@@ -215,9 +215,21 @@ Console.WriteLine($"A: {a} B: {b} C: {c}");
 Chapter06
 Understanding Inheritance and Polymorphism
 
-Left off page 301
+A derived class never inherits the constructors of a parent class, constructors are used to construct only the class that they are defined within
 
 
+
+
+
+Data Science Fundamentals Part 2: Machine Learning and Statistical Analysis
+20:30:00
+
+git log --all -decorate --oneline --graph
+git config --global alias.adog "log --all -decorate --oneline --graph"
+git checkout hash_code
+
+
+dotnet tool install --global dotnet-ef --version 9.0.0
 
 
 
