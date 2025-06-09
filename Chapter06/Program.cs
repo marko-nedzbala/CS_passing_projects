@@ -1,10 +1,15 @@
-﻿
-Car myCar = new Car(80) { Speed = 50 };
+﻿using Chapter06;
+//Car myCar = new Car(80) { Speed = 50 };
 
-Console.WriteLine("My car is going {0} MPH", myCar.Speed);
+//Console.WriteLine("My car is going {0} MPH", myCar.Speed);
 
 
-
+SalesPerson fred = new SalesPerson
+{
+    Age = 31,
+    Name = "Fred",
+    SalesNumber = 50
+};
 
 
 

@@ -217,12 +217,193 @@ Understanding Inheritance and Polymorphism
 
 A derived class never inherits the constructors of a parent class, constructors are used to construct only the class that they are defined within
 
-Left off page 307
+Inheritance constructor chaining
+public DerivedClass(dataType01 baseArgument01, dataType02 baseArgument02, dataType03 derivedArgument01)
+	: base(baseArgument01, baseArgument02, derivedArgument01)
+{
+	derivedArgument01 = propertyName;
+}
+
+protected keyword allows the derived class to access private members of the base class, derived class will not have to access the data indirectly using public methods or properties
+
+Record inheritance
+functions the same as class inheritance
+
+Containment/delegation model or aggregation: a "has-a" relationship
+
+public ClassB { ... }
+
+public ClassA
+{
+	ClassB b = new ClassB();
+	// expose certain benefit behaviors of an object
+	public returnType MethodName()
+	{ ... }
+	// expose via custom property
+	public ClassB PropertyName
+	{ ... }
+}
+// to use
+ClassA a = new ClassA();
+var value = a.MethodName();
+
+Polymorphism
+how related types respond differently to the same request, subclass to define its own version of a method defined by its base class
+
+virtual and override keywords
+
+you can override a method, then seal it from possibility be overiden again
+
+public override sealed returnType MethodName() { ... }
+
+Abstract
+polymorphic method: the class will define an implementation
+abstract classes are pure protocol
+
+Casting between types
+implicit cast: when 2 classes are related by an "is-an" relationship, it is always safe to convert a derived object to the base object
+
+explicit cast: can explicity downcast using the C# casting operator
+evaluated at runtime which could lead to errors
+as keyword: determines whether an item in an array is compatible with another item, returns null
+is keyword: similar to "as" but returns false
 
 
 
-Data Science Fundamentals Part 2: Machine Learning and Statistical Analysis
-20:30:00
+Chapter07
+Understanding Structured Exception Handling
+
+Building blocks of .NET Exception Handling
+1.) a class type that represents the details of the exception
+2.) a member that throws an instance of the exception class to the caller, under the right circumstances
+3.) a block of code on the caller's side that invokes the exception-prone member
+4.) a block of code on the caller's side that process/catch the exception, should it occur
+
+catch(Exception e)
+{
+	e.TargetSite; //allows you to determine the various details about the method that threw a given exception
+}
+
+
+
+Chapter08
+Working with Interfaces
+
+Interfaces can have:
+member definitions (like abstract methods)
+default implementations (virtual methods
+static members
+
+interfaces cannot have nonstatic constructors
+
+interfaces are highly polymorphic
+
+explicit casts
+MyInterface myInterfaceInstance = myClassInstance as MyInterface;
+
+myClassInstance is MyInterface myInterfaceInstance;
+
+Default Implementations (C# 8.0)
+
+static constructors are allowed: must be parameterless and can only access static properties and methods
+
+Explicitly bind an interface implementations to a given interface
+// example
+class MyClass : InterfaceA, InterfaceB
+{
+	returnType InterfaceA.TheMethod()
+	{
+		// actual implementation
+	}
+	
+	returnType InterfaceB.TheMethod()
+	{
+		// actual implementation
+	}
+}
+
+interface hierarchies are when interfaces inherit from other interfaces
+when interface hierarchies include default implementations, downstream interfaces can choose to carry the implementation from the base interface or create a new default implementation
+
+the best way to view this chapter is to remember that interfaces are types, and can be used in that manner at all times and you want to model a common behavior that is found across multiple hierarchies with no common parent class beyond System.Object
+
+
+
+Chapter09
+Understanding Object Lifetime
+
+heap allocation occurs only when you are creating instances of classes
+
+when the C# compiler encounters the new keyword, it emits a CIL newobj instruction into the method implementation
+the managed heap maintains a pointer, the next object pointer or new object pointer, that identifies exactly where the next object will be located
+newobj instruction tells the runtime to perform the following core operations
+1.) calculate the total amount of memory required for the object to be allocated, including the memory required by the data members and the base classes
+2.) examine the managed heap to ensure that there is indeed enough room to host the object to be allocated. If yes, the specified constructor is called, the caller is returned a reference to the new object in memory whose address just happens to be identical to the last position of the next object pointer
+3.) before returning the reference to the caller, advance the next object pointer to point to the next available slot on the managed heap
+
+if the managed heap does not have sufficient memory to allocate a requested object, a garbaga collection will occur
+
+Garage collection uses the following information to determine if an object is live:
+stack roots: stack variables provided by the compiler and stack walker
+garbage collection handles: handles that point to managed objects that can be referenced from code or the runtime
+static data: static objects in application domains that can reference other objects
+
+during the garbage collection process, the runtime will investiage objects on the managed heap to determine whether they are still reachable by the application, the runtime will buid an object graph.
+object graph: used to document all reachable objects
+
+there is a large heap to store large objects, it is called les frequently and can be compacted on demand
+
+to avoid scanning every object, a generation is used. The longer the object has existed on the heap, the more likely it is to stay there
+Generation 0: newly allocated object that has never been marked for collection
+Generation 1: an object that has survived garbage collection, serves as a buffer between short-lived objects and long-lived object
+Generation 2: identifies an object that has survived more than one sweep of the garbage collector, or a significantly large object that started in a generation 2 collection
+
+ephemeral generations: generations 0 and 1 are short-lived
+
+System.GC
+
+// Force a garbage collection and wait for each object to be finalized.
+GC.Collect();
+GC.WaitForPendingFinalizers();
+
+// Only investigate generation 0 objects.
+GC.Collect(0);
+GC.WaitForPendingFinalizers();
+
+implement the IDisposable interface to ensure tidy clean up of your code
+
+using declarations: a variable declaration preceded by the using keyword
+
+//variable will be in scope until the end of the method
+myMethod()
+{
+	using var rw = new MyResource();
+}
+
+Lazy objects
+Lazy<> allows you to define data that will not be created unless your code base actually uses it
+
+
+left off page 439
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 git log --all -decorate --oneline --graph
 git config --global alias.adog "log --all -decorate --oneline --graph"
