@@ -384,7 +384,128 @@ Lazy objects
 Lazy<> allows you to define data that will not be created unless your code base actually uses it
 
 
-left off page 439
+PART IV - ADVANCED C# PROGRAMMING
+Chapter10
+Collections and Generics
+
+boxing: value type --> reference type
+unboxing: reference type --> value type
+
+int myInt = 25;
+//box the int into an object reference
+object boxedInt = myInt;
+//unbox the reference back into a corresponding int
+int unboxedInt = (int)boxedInt;
+
+PriorityQueue<TElement, TPriority>
+works just like Queue<T>, except each item is given a priority, items are removed from lowest to highest priority
+
+SortedSet<T> Class
+
+class ExampleSort : IComparer<MyType>
+{
+	public in Compare(MyType type01, MyType type02)
+	{
+		if(type01?.fieldName > type02?.fieldName)
+		{
+			return 1;
+		}
+		if (type01?.fieldName < type02?.fieldName)
+		{
+			return -1;
+		}
+		return 0;
+	}
+}
+
+ObservableCollection<T>
+identical to working with List<T>, supports the CollectionChanged event, the event fires whenver a new item is inserted, a current item is removed/relocated, or the entire collection is modified
+
+// example
+ObservableCollection<Person> people = new ObservableCollection<Person>()
+{
+    new Person { FirstName="Peter", LastName="Billy", Age=52},
+    new Person { FirstName="Kvein", LastName="Sammy", Age=48}
+};
+
+static void people_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+{
+    Console.WriteLine("Action for this event: {0}", e.Action);
+    if(e.Action == NotifyCollectionChangedAction.Remove)
+    {
+        Console.WriteLine("Here are the old items");
+        foreach(Person p in e.OldItems)
+        {
+            Console.WriteLine(p.ToString());
+        }
+    }
+
+    if (e.Action == NotifyCollectionChangedAction.Add)
+    {
+        Console.WriteLine("Here are the new items");
+        foreach(Person p in e.NewItems)
+        {
+            Console.WriteLine(p.ToString());
+        }
+    }
+}
+
+people.CollectionChanged += people_CollectionChanged;
+
+people.Add(new Person("Fred", "Smith", 32));
+people.RemoveAt(0);
+
+Creating Custom Generic Methods
+
+//example
+static void Swap<T>(ref T a, ref T b)
+{
+    Console.WriteLine("You sent the Swap() method a {0}", typeof(T));
+    T temp = a;
+    a = b;
+    b = temp;
+}
+
+int x1 = 11;
+int x2 = 24;
+Swap<int>(ref x1, ref x2);
+Console.WriteLine("New x1: {0}, New x2: {1}", x1, x2);
+
+Creating Custom Generic Structures and Classes
+
+// setting the default value in a field within a class
+_xPos = default
+
+Pattern Matching with Generics
+can take generics as the type parameter
+
+Constraining Type Parameters
+generic constraint			meaning in life
+where T : struct			<T> must have System.ValueType
+where T : class				<T> must not have System.ValueType
+where T : new()				<T> must have a default constructor, useful when you must create an instance of the type 
+							parameter because you cannot assume you know the format of custom constructors, listed last
+where T : NameOfBaseClass	<T> must be derived from the class specified by NameOfBaseClass
+where T : NameOfInterface	<T> must implement the interface specified by NameOfInterface
+
+
+
+Chapter11
+Advanced C# Language Features
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
