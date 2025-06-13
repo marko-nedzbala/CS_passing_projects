@@ -553,24 +553,52 @@ Point p2 = new Point(40, 55);
 Console.WriteLine("Add {0}", p1 + p2);
 Console.WriteLine("Subtract {0}", p1 - p2);
 
-Left off page 493
+Custom Type Conversions
+public static explicit typeToConvertTo(typeYouAreConvertingFrom t)
+{ ... }
+
+//example
+public static explicit operator Square(Rectange r)
+{
+    Square s = new Square { Length = r.Height };
+    return s;
+}
+
+Implicit Type Conversions
+not alloed to define explicit and implicit conversions functions on the same type if they do not differ by their return type or parameter set
+an implicit caller can use explicit cast syntax
+
+only the first parameter can be qualified with 'this'
+
+define an extension method that can only extend a class or structure that implements the correct interface
+
+// example
+public static void PrintDataAndBeep(this System.Collections.IEnumerable iterator)
+{
+    foreach (var item in iterator)
+    {
+        Console.WriteLine(item);
+        Console.Beep();
+    }
+}
+
+Anonymous Types
+
+var car = new { Make = "Saab", Color = "Blue", Speed = 100 };
+Console.WriteLine("Your {0} is a beautiful {1} going at: {2}", car.Make, car.Color, car.Speed);
+
+the compiler will generate a new class definition only when an anonymous type contain unique names of the anonymous type
+
+Pointer types
+
+page 511 to page 519
+System.IntPtr type
+System.Runtime.InteropServices.Marshal type
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Chapter12
+Delegates, Events, and Lambda Expressions
 
 
 
