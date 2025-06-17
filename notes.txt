@@ -600,6 +600,26 @@ System.Runtime.InteropServices.Marshal type
 Chapter12
 Delegates, Events, and Lambda Expressions
 
+Delegate type
+a delegate maintains:
+1.) the address of the method on which it makes calls
+2.) the parameters (if any) of this method
+3.) the return type (if any) of this method
+
+after the delegate object has been created and given the necessary information, it may dynamically invoke the method(s) it points to at runtime
+
+when builing a type using the C# delegate keyword, you are indirectly declaring a class type that derives from System.MulticastDelegate
+
+Sending object state notifications using delegates
+
+
+Left off page 528
+
+
+
+
+
+
 
 
 
