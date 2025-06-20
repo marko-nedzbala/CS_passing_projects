@@ -13,15 +13,19 @@ DisplayDelegateInfo(b2);
 Console.WriteLine();
 
 Car c1 = new Car("Slugbug", 100, 10);
-c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent));
+//c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent));
+c1.RegisterWithCarEngine(OnCarEngineEvent);
+c1.RegisterWithCarEngine(new Car.CarEngineHandler(OnCarEngineEvent2));
 Console.WriteLine("***** Speeding up *****");
 for(int i = 0; i < 6; i++)
 {
     c1.Accelerate(20);
 }
 
+Console.WriteLine();
 
-
+MyGenericDelegate<string> strTarget = new MyGenericDelegate<string>(StringTarget);
+strTarget("Some string data");
 
 
 
@@ -31,6 +35,22 @@ static void OnCarEngineEvent(string msg)
     Console.WriteLine(" => {0}", msg);
     Console.WriteLine("************\n");
 }
+
+static void OnCarEngineEvent2(string msg)
+{
+    Console.WriteLine("=> {0}", msg.ToUpper());
+}
+
+static void StringTarget(string arg)
+{
+    Console.WriteLine("arg in uppercase is: {0}", arg.ToUpper());
+}
+
+static void IntTargt(int arg)
+{
+    Console.WriteLine("++arg is: {0}", ++arg);
+}
+
 
 
 
@@ -78,7 +98,7 @@ public class Car
     //3.) add registration function for the caller
     public void RegisterWithCarEngine(CarEngineHandler methodToCall)
     {
-        _listOfHandlers = methodToCall;
+        _listOfHandlers += methodToCall;
     }
 
     //4.) implement the method to invoke the delegate's invocation list under the correct circumstances
@@ -113,3 +133,4 @@ public class Car
 
 public delegate int BinaryOp(int x, int y);
 
+public delegate void MyGenericDelegate<T>(T arg);

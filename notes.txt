@@ -612,6 +612,220 @@ when builing a type using the C# delegate keyword, you are indirectly declaring 
 
 Sending object state notifications using delegates
 
+Action<> returns void
+Func<> returns your parameter
+
+C# Events
+if the delegate is not declared private, the caller will have direct access to the delegate objects
+
+class MyClass
+{
+	public delegate void MyHandler(dataType parameterName);
+	public event MyHandler MyEvent;
+	
+	public returnType MethodName(dataType parameterName)
+	{
+		if (someCondition)
+		{
+			MyEvent?.Invoke(someParameter);
+		}
+	}
+}
+
+//calling it
+returnType AMethod(dataType parameterName)
+{ ... }
+
+MyClass myClassInstance = new MyClass();
+myClassInstance.MyEvent += AMethod;
+myClassInstance.MethodName(argumentName);
+
+Creating custom event arguments
+reference this for later
+Page 544 to page 546
+
+public MyEventArgs : EventArgs
+{
+	public readonly dataType fieldName; //this is the parameterName as part of the delegate
+	public MyEventArgs(dataType parameterName)
+	{
+		fieldName = parameterName;
+	}
+}
+
+// the rest is very similar
+class MyClass
+{
+	public delegate void MyHandler(object sender, MyEventArgs e);
+	public event MyHandler MyEvent;
+	
+	public returnType MethodName(dataType parameterName)
+	{
+		if (someCondition)
+		{
+			MyEvent?.Invoke(this, new MyEventArgs(parameterName);
+		}
+	}
+}
+
+//calling it
+returnType AMethod(object sender, MyEventArgs e)
+{
+	sender, e.fieldName
+}
+
+MyClass myClassInstance = new MyClass();
+myClassInstance.MyEvent += AMethod;
+myClassInstance.MethodName(argumentName);
+
+
+Can instead use a Generic EventHandler<T> Delegate because so many custom delegates take an object as the first parameter and an EventArgs descender as the second
+
+public MyEventArgs : EventArgs
+{
+	public readonly dataType fieldName; //this is the parameterName as part of the delegate
+	public MyEventArgs(dataType parameterName)
+	{
+		fieldName = parameterName;
+	}
+}
+
+// the rest is very similar
+class MyClass
+{
+	public event MyHandler<MyEventArgs> MyEvent;
+	
+	public returnType MethodName(dataType parameterName)
+	{
+		if (someCondition)
+		{
+			MyEvent?.Invoke(this, new MyEventArgs(parameterName);
+		}
+	}
+}
+
+//calling it
+returnType AMethod(object sender, MyEventArgs e)
+{
+	sender, e.fieldName
+}
+
+MyClass myClassInstance = new MyClass();
+myClassInstance.MyEvent += AMethod;
+myClassInstance.MethodName(argumentName);
+
+MyHandler<MyEventArgs> d = AMethod;
+
+Anonymous Methods
+SomeType t = new SomeType();
+t.SomeEvent += delegate(optionallySpecifiedDelegateArgs)
+{
+	...
+}
+
+in C# 9.0 can declare an anonymous method as static
+
+Lambda Expressions
+
+argumentsToProcess => statementsToProcessThem
+
+expression-bodied members
+
+TypeMember => SingleCodeStatement
+
+
+
+Chapter13
+LINQ to Objects
+
+LINQ to Objects: applying LINQ queries to arrays and collections
+LINQ to XML: using LINQ to manipulate and query XML documents
+LINQ to Entities: LINQ queries within the ADO.NET Entity Framework (EF) Core API
+Parallel LINQ (PLINQ): allows for parallel processing data returned from a LINQ query
+
+LINQ query expressions: SQL like statements
+LINQ extension methods: uses Lambda expressions
+
+// simple example
+string[] currentVideoGames = { "Morrowind", "Uncharted 2", "Fallout 3", "Daxter", "System Shock 2" };
+
+IEnumerable<string> subset =
+	from g in currentVideoGames
+	where g.Contains(" ")
+	orderby g
+	select g;
+
+foreach (string s in subset)
+{
+	Console.WriteLine("Item: {0}", s);
+}
+
+LINQ query expression is deferred execution, not actually evaluated until you iterate over the resulting sequence
+First/FirstOrDefault, Single/SingleOrDefault, aggregation methods, the query is executed immediately
+
+can define a field within a class/struct whose value is the result of a LINQ query, cannot use implicit typing as the var keyword cannot be used for fields, and it must be static
+
+LINQ Query Operators
+var result = 
+	from item in Container
+	where BooleanExpressions
+	orderby item
+	select item;
+
+Excellent reference chapter of LINQ
+
+
+
+Chapter14
+Processes, AppDomains, and Load Contexts
+
+process: a running program, a safe boundary for a running application, an operating system-level concept used to describe a set of resources and the necessary memory allocations used by a running application
+
+thread: a unique path of execution within a Windows process
+
+System.Diagnostics allows to programmatically interact with processes and various diagnostic-related types
+
+Process.GetProcessById(a_Number);
+
+get information about a process's thread set
+ProcessThreadCollection
+
+module
+a general term used to describe a given *.dll (or the *.exe itself) that is hosted by a specific process
+
+Starting and stopping processes programmatically
+proc = Process.Start(@"File\location\file.ext", "url");
+
+ProcessStartInfo psi = new ProcessStartInfo(@"..\MyFile.docx");
+this takes advantage of the OS shortcuts launching the file in the default application
+
+App Domains
+executables are not hosted directly within a Windows process, .NET and .NET Core executables are hosted by a logical paritition within a process called an application domain
+
+AppDomain defaultAD = AppDomain.CurrentDomain;
+Console.WriteLine(defaultAD);
+
+Assembly[] loadedAssemblies = defaultAD.GetAssemblies();
+Console.WriteLine("Loaded assemblies: {0}", loadedAssemblies);
+
+foreach (Assembly assembly in loadedAssemblies)
+{
+    Console.WriteLine($"Name: {assembly.GetName().Name}, Version: {assembly.GetName().Version}");
+}
+
+Can load an assembly dynamically
+
+
+
+
+
+
+
+
+
+
+
+
 
 Left off page 528
 
