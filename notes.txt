@@ -1005,6 +1005,90 @@ PART V - PROGRAMMING WITH .NET CORE ASSEMBLIES
 Chapter16
 Building Configuring Class Libraries
 
+naming of a namespace
+CompanyName.ProductName.AssemblyName.Path
+
+C# 10 has file-scoped namespaces, no need for opening and closing curly braces wrapping the content
+
+Nest namespaces:
+Method #1
+
+namespace CustomNamespaces
+{
+	namespace MyNamespaces
+	{ ... }
+}
+
+Method #2
+file-scoped namespace, C# 10 or later
+
+namespace CustomNamespaces;
+namespace MyNamespaces
+{ ... }
+
+Method #3
+the most commonly used
+
+namespace CustomNamespaces.MyNamespaces;
+public class MyClass { ... }
+
+assembly: a versioned, self-describing binary file hosted by the .NET runtime
+
+major.minor.build.revision
+
+Format of a .NET Assembly
+	An operating system file header
+	A CLR file header
+	CIL code
+	Type metadata
+	An assembly manifest
+	Optional embedded resources
+
+An operating system file header
+establihses the fact that the assembly can be loaded and manipulated by the target operating system
+
+A CLR file header
+a block of all .NET assemblies must support and to be hosted by the .NET runtime, defines numerous flags that enable the runtime to understand the layout of the managed file
+
+CIL code
+computed with JIT compiler
+
+Type metadata
+describes the format of the contained types and format of external types referenced by this assembly
+
+An assembly manifest
+documents each module within the assembly, establihes the version of the assembly and documents any external assemblies referenced by the current assembly
+
+Optional embedded resources
+embedded resources, 
+
+Configuring applications with configuration files
+Page 688 to page 693
+
+Excellent reference chapter on class libraries, how C# works and .NET Core works
+
+
+
+Chapter17
+Type Reflection, Late Binding, Attribute, and Dynamic Types
+
+using metadata is a key element of the .NET platform
+
+strings are clearly documented in assembly metadata, be careful for security reasons
+
+Reflection
+the process of runtime type discovery
+
+System.Type class defines members that can be used to examine a type's metadata
+Type t = typeof(MyClass);
+
+Type t = Type.GetType("MyNamespace.MyClass", do not throw exception if type not found, ignore case
+
+friendly name: the assembly name without any version information
+Type t = Type.GetType("FullyQualifiedName.MyClass, friendly name");
+
++nested type
+Type t = Type.GetType("FullyQualifiedName.MyClass+MyNestedClass");
 
 
 
@@ -1017,12 +1101,7 @@ Building Configuring Class Libraries
 
 
 
-
-
-
-
-
-Left off page 626
+Left off page 721
 
 
 

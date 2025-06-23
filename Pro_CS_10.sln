@@ -46,7 +46,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter15", "Chapter15\Chap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter15_GUI", "Chapter15_GUI\Chapter15_GUI.csproj", "{750CAF03-F535-468A-BE7F-3172C84DBB13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter16", "Chapter16\Chapter16.csproj", "{D2DC29D9-DFBE-4EAA-AD74-CB80AC6BDA08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter17", "Chapter16\Chapter17.csproj", "{D2DC29D9-DFBE-4EAA-AD74-CB80AC6BDA08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
