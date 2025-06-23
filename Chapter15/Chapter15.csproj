@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Chapter14_ClassLibrary1\Chapter14_ClassLibrary1.csproj" />
-  </ItemGroup>
-
 </Project>

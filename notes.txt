@@ -815,6 +815,195 @@ foreach (Assembly assembly in loadedAssemblies)
 
 Can load an assembly dynamically
 
+assembly location with application load contexts
+add a new ClassLibrary, make sure to add the Project Reference
+
+// example code
+var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Chapter14_ClassLibrary1.dll");
+
+AssemblyLoadContext lc1 = new AssemblyLoadContext("NewContext1", false);
+var cl1 = lc1.LoadFromAssemblyPath(path);
+var c1 = cl1.CreateInstance("Chapter14_ClassLibrary1.Car");
+
+AssemblyLoadContext lc2 = new AssemblyLoadContext("NewContext2", false);
+var cl2 = lc2.LoadFromAssemblyPath(path);
+var c2 = cl2.CreateInstance("Chapter14_ClassLibrary1.Car");
+
+Console.WriteLine("*** Loading Additionl Assemblies in Different Contexts ***");
+Console.WriteLine($"Assembly1 Equals(Assembly2) {cl1.Equals(cl2)}");
+Console.WriteLine($"Assembly1 == Assembly2 {cl1 == cl2}");
+Console.WriteLine($"Class1.Equals(Class2) {c1.Equals(c2)}");
+Console.WriteLine($"Class1 = Class2 {c1 == c2}");
+
+
+
+Chapter15
+Multithreaded, Parallel, and Async Programming
+
+System.Threading Namespace
+
+System.Threading.Thread class
+the most primitive of System.Threading, an object-oriented wrapper around a given path of execution within an AppDomain
+
+Manually creating secondary threads
+1.) Create a method to be the entry point for the new thread
+2.) Create a new ParameterizedThreadStart, or a ThreadStart delegate, passing the address of the method defined in step #1 to the constructor
+3.) Create a Thread object, passing the ParameterizedThreadStart/ThreadStart delegate as a constructor argument
+4.) Establish any initial thread characteristics (name, priority, etc...)
+5.) Call the Thread.Start() method, this starts the thread at the method referenced by the delegate created in step 2 as soon as possible
+
+ThreadStart delegate can point only to methods that return void and take no arguments
+if you want to pass to the method executing the secondary thread, need to use ParameterizedThreadStart delegate
+class MyClass {...}
+void MyMethod(object data)
+{ ... }
+MyClass myClassInstace = new MyClass(constructor Data);
+Thread t = new Thread(new ParameterizedThreadStart(MyMethod));
+t.Start(myClassInstance);
+
+AutoResetEvent class to know when a secondary thread has completed its work
+
+Foreground threads: can prevent the current application from terminating, .NET Core Runtime will not shut down an application until all foreground threads have ended
+Background threads (daemon threads): viewed by the .NET Core Runtime as expendable paths of execution that can be ignored at any point in time
+
+Synchronization using C# lock
+
+class MyClass
+{
+    private object threadLock = new object();
+
+    public void MyMethod()
+    {
+        lock(threadLock)
+        {
+            // code
+        }
+    }
+}
+
+Much better to use:
+Monitor.Enter();
+
+public void MyMethod()
+{
+    Monitor.Enter(threadLock);
+    try
+    { ... }
+    finally
+    { Monitor.Exit(threadLock); }
+}
+
+Task Parallel Library (TPL)
+will distribute your application's workload across available CPUs dynamically, using the runtime thread pool
+
+System.Threading.Tasks.Parallel: contains methods that allow you to iterate over a collection of data
+data parallelism: iterating over an array/collection in a parallel manner using the Parallel.For() or Parallel.ForEach()
+in a GUI, secondary threads can never directly access user interface controls
+
+GUI controls have thread affinity, with the thread that created them
+
+Tak.Factory.StartNew(Action<T>Delegate);
+
+Parallel LINQ Queries (PLINQ)
+int[] myData = null;
+try
+{
+    myData = (from x in data.AsParallel().WithCancellation(_cancelToken.Token)
+        where x == someCondition
+        orderby x descending
+        select n).ToArray();
+}
+catch(OperationCanceledException ex)
+{
+    Console.WriteLine(ex.Message);
+}
+
+async keyword is used to qualify that a method, lambda expression or anonymous method should be called in an asynchronous manner automatically
+await keyword will automatically pause the current thread from any further activity until the task is complete, leaving the calling thread free to continue
+
+// example
+static async Task<string> DoWorkAsync()
+{
+    return await Task.Run(() =>
+    {
+        Thread.Sleep(5_000);
+        return "Done with work";
+    });
+}
+
+// to call
+string message = await DoWorkAsync();
+Console.WriteLine(message);
+
+our method states: return a Task<T> object, which is the return value of Task.Run(), Run() takes a Func<> or Action<> delegate
+When the method is called:
+    1.) runs a new tasks
+    2.) the task will cause the calling thread will perform its task
+    3.) when completed, it returns a <T> value
+    4.) put the value in new Task<T> object
+    5.) return to the caller
+
+SynchronizationContext: allows code that uses different synchronization methods to work well together
+
+Async methods that don't return data
+if an exception is thrown, the exception has no where to go, so it is placed on the threading execution context
+
+static async Task MyMethod()
+{
+    await Task.Run(() =>
+    {
+        //do some work here
+    });
+}
+
+//to use
+try
+{
+    await MyMethod();
+}
+catch (Exception ex)
+{
+    //some handling code
+}
+
+when an exception is thrown out of a Task/Task<T> method, the exception is captured and placed on the Task object
+
+can have multiple awaits, but best is to have Task.WhenAll()
+await Task.WhenAll(Task.Run(() =>
+{
+    //some code
+});
+
+can cancel async/await operations with WaitAsync()
+
+// example
+static async Task<string> GetStockData()
+{
+    HttpClient client = new HttpClient();
+    string stockData = await client.GetStringAsync("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo");
+    return await Task.Run(() =>
+    {
+        Console.WriteLine("Download complete");
+        return stockData;
+
+    });
+
+    // this is also acceptable
+    return stockData;
+}
+
+//to call
+string data = await GetStockData();
+Console.WriteLine(data);
+
+
+
+
+
+PART V - PROGRAMMING WITH .NET CORE ASSEMBLIES
+
+Chapter16
+Building Configuring Class Libraries
 
 
 
@@ -827,7 +1016,13 @@ Can load an assembly dynamically
 
 
 
-Left off page 528
+
+
+
+
+
+
+Left off page 626
 
 
 
