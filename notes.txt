@@ -1090,18 +1090,47 @@ Type t = Type.GetType("FullyQualifiedName.MyClass, friendly name");
 +nested type
 Type t = Type.GetType("FullyQualifiedName.MyClass+MyNestedClass");
 
+Reflecting on Generic Types
+use ` and a number for the number of parameters
+List<T>
+System.Collections.Generic.List`1
+
+Dictionary<TKey, TValue>
+System.Collections.Generic.Dictionary`2
+
+dynamic load: the act of loading external assemblies on demand, use the Assembly class
+Assembly asm = Assembly.LoadFrom(assemblyName);
+
+Late binding
+late binding: create an instance of a given type and invoke its members at runtime without having hard-coded compile-time knowledge of its existence
+
+System.Activator class is the key to the .NET late-binding process
+
+Attributes
+allows to embed additional metadata into an assembly using attributes, they care code annotations that can be applied to a given type
+
+when supplying constructor parameters to an attribute, the attribute is not allocated into memory until the parameters are reflected upon by anohter type or an external tool
+
+Building custom attributes
+public seal class MyAttribute : Attribute
+{ ... }
+
+for security reasons, .NET best practice to design all custom attributes as sealed
+
+restricting your custom attribute usage
+use the AttributeUsage attribute, with the AttributeTarget
+
+//example
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false)]
+public sealed class MyClass : Attribute
+{ ... }
+
+Assembly-Level Attributes
+[assembly: assemblyName]
+namespace MyNameSpace;
 
 
-
-
-
-
-
-
-
-
-
-Left off page 721
+Left off page 745
 
 
 
