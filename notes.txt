@@ -1130,6 +1130,52 @@ Assembly-Level Attributes
 namespace MyNameSpace;
 
 
+
+Chapter18
+Understanding CIL and the Role of Dynamic Assemblies
+
+CIL is a full-fledged .NET programming language, with its own syntax, semantics and compiler (liasm.exe)
+knowledge of CIL is analogous to a C/C++ programmer's understanding of assembly language
+
+CIL Directives
+CIL directives are a set of well-known CIL tokens that are used to describe the overall structure of a .NET assembly, used to inform the CIL compiler how to define the namespaces, types and members that will populate an assembly
+
+CIL Attributes
+CIL directives alone are not descriptive enough to fully express the definition of a given .NET type/type member, so they can be further specified with various CIL attributes to qualify how a directive should be processed
+
+CIL Opcodes
+operation codes, provide the type's implementation logic
+
+CIL Opcode/CIL Mnemonic Distinction
+the CIL is actually binary codes, so CIL mnemonics are used to simplify the translation
+CIL opcodes are referred to as friendly string token mnemonics, rather than the underlying numerical values
+for example
+CIL mnemonics	CIL opcode
+add				0X59
+
+Stack-Based Nature of CIL
+
+virtual execution stack: the entity used to hold a set of value to be evaluated
+
+loading: CIL provides opcodes to push a value onto the stack
+storing: opcodes to transfer the topmost value on the stack into memory
+
+in CIL cannot access the a point of data directly, need to explicitly load the item onto the stack, only to then pop it off for later use
+
+
+
+
+
+PART VI - FILE HANDLING, OBJECT SERIALIZATION, AND DATA ACCESS
+
+Chapter19
+File I/O and Object Serializaton
+
+
+
+
+
+
 Left off page 745
 
 
