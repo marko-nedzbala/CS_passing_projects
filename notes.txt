@@ -1171,8 +1171,13 @@ PART VI - FILE HANDLING, OBJECT SERIALIZATION, AND DATA ACCESS
 Chapter19
 File I/O and Object Serializaton
 
+System.IO namespace devoted to file-based, memory-based and I/O services
 
-
+Interact with files and machine's directory structure
+1.) Directory class - static class
+2.) File class - static class
+3.) DirectoryInfo - instance class
+4.) FileInfo - instance class
 
 
 
