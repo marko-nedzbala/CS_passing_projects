@@ -1179,6 +1179,248 @@ Interact with files and machine's directory structure
 3.) DirectoryInfo - instance class
 4.) FileInfo - instance class
 
+OS anatosic separater
+$"C{Path.VolumneSeparatorChar}{Path.DirectorySeparaterChar}
+
+Directory class: typically returns string data
+FileInfo/DirectoryInfo classes: typically return strongly typed objects
+
+DriveInfo class gives information about the class
+
+Abstract Stream Class
+stream: a chunk of data flowing between a source and a destination, a common way to interact with a sequence of bytes regardless of what kind of device stores or displays the bytes in question
+
+System.IO.Stream class
+
+more common to work with various stream wrappers that make it easier to work with textual data or .NET types
+
+example of working with FileStream object
+using System.Text;
+
+using (FileStream fs = File.Open("myMessage.data", FileMode.Create))
+{
+    // encode a string as an array of bytes
+    string msg = "Hello!";
+    byte[] msgByteArray = Encoding.Default.GetBytes(msg);
+
+    //write byte[] to a file
+    fs.Write(msgByteArray, 0, msgByteArray.Length);
+
+    //reset internal position of stream
+    fs.Position = 0;
+
+    //read the types from the file and display to console
+    Console.Write("Your message as an array of bytes: ");
+    byte[] bytesFromFile = new byte[msgByteArray.Length];
+    for (int i = 0; i < msgByteArray.Length; i++)
+    {
+        bytesFromFile[i] = (byte)msgByteArray[i];
+        Console.Write(bytesFromFile[i]);
+    }
+
+    //display decoded messages
+    Console.Write("\nDecoded message: ");
+    Console.WriteLine(Encoding.Default.GetString(bytesFromFile));
+    Console.ReadLine();
+}
+File.Delete("myMessage.dat");
+
+StreamWriters and StreamReaders make it easier to work with character-based data, string
+
+StringWriters and StringReaders
+treats textual information as a stream of in-memory characters, helpful when you would like to append character-based information to an underlying buffer
+
+BinraryWriters and BinaryReaders
+allow to read and write discrete data types to an underlying stream in a compact binary format
+
+Watching Files Programmatically
+
+// example
+
+FileSystemWatcher watcher = new FileSystemWatcher();
+try
+{
+    watcher.Path = @".";
+}
+catch(ArgumentException ex)
+{
+    Console.WriteLine(ex.Message);
+    return;
+}
+
+// set up things to be on the lookout for
+watcher.NotifyFilter = NotifyFilters.LastAccess
+    | NotifyFilters.LastWrite
+    | NotifyFilters.FileName
+    | NotifyFilters.DirectoryName;
+
+// only watch text files
+watcher.Filter = "*.txt";
+
+// now add the event handlers
+watcher.Changed += (s, e) => Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+watcher.Created += (s, e) => Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+watcher.Deleted += (s, e) => Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+// specify what is done when a file is renamed
+watcher.Renamed += (s, e) => Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
+// begin watching the directory
+watcher.EnableRaisingEvents = true;
+
+Console.WriteLine(@"Press 'q' to quit app");
+
+// raise some events
+using(var sw = File.CreateText("Test.txt"))
+{
+    sw.Write("This is some text");
+}
+File.Move("Test.txt", "Test2.txt");
+//File.Delete("Test2.txt");
+
+while (Console.Read() != 'q') ;
+
+Object Serialization
+serialization: describes the process of persisting (and possibly transferring) the state of an object into a stream
+the persisted data sequence contains all the necessary information you need to recontruct( or deserialize) the public state of the object for use later
+
+BinaryFormatter type is a high security risk
+
+if you persist a derived class, all public data up the chain of inheritance comes along for the ride, use graph  object to represent a set of interrelated objects
+can persist any object graph into any System.IO.Stream derived type, all that matters is the sequence of data correctly represents the state of objects within the graph
+
+XML
+System.Xml.Serialization.XmlSerializer
+
+JSON
+System.Text.Json namespace provides System.Text.Json.JsonSerializer
+
+static void SaveAsJsonFormat<T>(T objGraph, string fileName)
+{
+    File.WriteAllText(fileName, System.Text.Json.JsonSerializer.Serialize(objGraph));
+}
+
+SaveAsJsonFormat(jbc, "CarData.json");
+
+by default will not include fields, 2 options
+
+Option 1: tell the serializer to include the fields
+
+static void SaveAsJsonFormat<T>(T objGraph, string fileName)
+{
+    var options = new JsonSerializerOptions
+    {
+        IncludeFields = true,
+    };
+    File.WriteAllText(fileName, System.Text.Json.JsonSerializer.Serialize(objGraph, options));
+}
+
+Option 2: annotate the fields with attributes
+[JsonInclude]
+
+By default the JSON that is outputted is minified
+
+pretty-print the JSON
+
+static void SaveAsJsonFormat<T>(T objGraph, string fileName)
+{
+    var options = new JsonSerializerOptions
+    {
+        IncludeFields = true,
+        WriteIndented = true,
+    };
+    File.WriteAllText(fileName, System.Text.Json.JsonSerializer.Serialize(objGraph, options));
+}
+
+C# for naming public things uses PascalCasing
+JS frameworks to name things uses camelCasing
+
+can use camelCasing by setting the PropertyNamingPolicy = null in the options
+
+static void SaveAsJsonFormat<T>(T objGraph, string fileName)
+{
+    var options = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = null,
+        IncludeFields = true,
+        WriteIndented = true,
+    };
+    File.WriteAllText(fileName, System.Text.Json.JsonSerializer.Serialize(objGraph, options));
+}
+
+when reading JSON, C# is (by default) case sensitive, setting of PropertyNamingPolicy is used during Deserialization
+so if not set: PropertyNamingPolicy is set to Pascal case
+
+can tell C# to use caing indifference
+PropertyNameCaseInsensitive option to true
+PropertyNameCaseInsensitive = true,
+
+
+
+Chapter20
+Data Access with ADO.NET
+
+ADO.NET supports multiple data providers, each of which is optimized to interact with a specific DBMS
+
+layers
+1.) Client Assembly
+2.) .NET Core Platform Data Provider
+Connection Object
+    Transaction
+Command Object
+    Parameter Collection
+DataReader Object
+DataAdapter Object
+    Select Command
+    Insert Command
+    Update Command
+    Delete Command
+3.) Database
+
+ADO.NET Data Providers
+Data Provider               Namesapce/NuGet Package Name
+Microsoft SQL Server        Microsoft.Data.SqlClient
+OBC                         System.Data.Odbc
+OLE DB (Windows Only)       System.Data.OleDb
+
+I installed the following packages
+    Microsoft.Data.SqlClient
+    System.Data.Common
+    System.Data.Odbc
+    System.Data.OleDb
+
+to obtain the DbProviderFactory derived type for your data provider, each provider provides a static property used to return the correct type
+// get the factpry for the SQL data provider
+DbProviderFactory = sqlFactory = Microsoft.Data.SqlClient.SqlClientFactory.Instance;
+
+Microsoft.Extensions.Configuration.Json
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Left off page 745
